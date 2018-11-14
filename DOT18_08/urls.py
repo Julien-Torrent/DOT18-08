@@ -4,9 +4,8 @@ Definition of urls for DOT18_08.
 
 from datetime import datetime
 from django.conf.urls import url
-import django.contrib.auth.views
 
-import app.forms
+import django.contrib.auth.views
 import app.views
 
 # Uncomment the next lines to enable the admin:
