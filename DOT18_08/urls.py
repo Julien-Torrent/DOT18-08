@@ -14,8 +14,12 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = [
-    # Examples:
+    # Pages:
     url(r'^$', app.views.home, name='home'),
     url(r'^command$', app.views.command, name='command'),
+    # API :
+    url(r'^api/forward$', app.api.forward, name='forward'),
+
+    # Admin :
     url(r'^admin/', admin.site.urls),
 ]
