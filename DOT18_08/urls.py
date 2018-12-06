@@ -26,6 +26,9 @@ urlpatterns = [
     url(r'^api/setSpeed/(?P<speed>\d{0,4})', app.api.setSpeed, name='setSpeed'),
     url(r'^api/getSpeed', app.api.getSpeed, name='getSpeed'),
 
+    url(r'^api/setLeds/(?P<ledsStatus>\d)', app.api.setLeds, name='setLeds'),
+    url(r'^api/getLeds', app.api.getLeds, name='getLeds'),
+
     # Admin :
     url(r'^admin/', admin.site.urls),
 ]
