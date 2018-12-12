@@ -23,7 +23,7 @@ urlpatterns = [
     url(r'^api/setMode/(?P<mode>\d)', app.api.setMode, name='setMode'),
     url(r'^api/getMode', app.api.getMode, name='getMode'),
 
-    url(r'^api/setSpeed/(?P<speed>\d{0,4})', app.api.setSpeed, name='setSpeed'),
+    url(r'^api/setSpeed/(?P<speed>\d{0,3})', app.api.setSpeed, name='setSpeed'),
     url(r'^api/getSpeed', app.api.getSpeed, name='getSpeed'),
 
     url(r'^api/setLeds/(?P<ledsStatus>\d)', app.api.setLeds, name='setLeds'),
