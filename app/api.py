@@ -6,7 +6,7 @@ import json
 
 Mode = 0            # Current Mode 0=Manual, 1=FullForward, 2=Automatic
 Speed = 0           # 0 to 1000 0=Stopped, 1000=Full Speed
-AllLedsOn = False   # False = eteint, True = allumé
+AllLedsOn = False   # False = éteint, True = allumé
 
 commands = list()
 
@@ -17,7 +17,7 @@ def setLeds(request, ledsStatus):
 
 def getLeds(request):
     global AllLedsOn
-    return JsonResponse({'LedsOn' : AllLedsOn})
+    return JsonResponse({'ledsOn' : AllLedsOn})
 
 def setMode(request, mode):
     global Mode
@@ -26,7 +26,7 @@ def setMode(request, mode):
 
 def getMode(request):
     global Mode
-    return JsonResponse({'Mode' : Mode})
+    return JsonResponse({'mode' : Mode})
 
 
 def setSpeed(request, speed):
@@ -36,7 +36,7 @@ def setSpeed(request, speed):
 
 def getSpeed(request):
     global Speed
-    return JsonResponse({'Speed': Speed})
+    return JsonResponse({'speed': Speed})
 
 
 # Thymio calls this to get the next action on Manual mode
@@ -45,23 +45,16 @@ def nextMove(request):
         res = commands[0]
         commands.pop(0)
         return JsonResponse(res)
-    else :
+    else:
         return JsonResponse({'function':''})
 
 
 # getSpeed and add function name 'forward'
 def forward(request):
-    errors_dict = json.loads(getSpeed(request).content)
-
-    errors_dict["Function"] = "forward"
-    commands.append(errors_dict)
-    return JsonResponse(errors_dict)
+    commands.append({'function' : "forward", 'speed' : int(Speed)})
+    return JsonResponse({'function' : "forward", 'speed' : int(Speed)})
 
 # getSpeed negates it and add function name 'backward'
 def backward(request):
-    errors_dict = json.loads(getSpeed(request).content)
-
-    errors_dict["Speed"] = -int(errors_dict["Speed"]);
-    errors_dict["Function"] = "backward"
-    commands.append(errors_dict)
-    return JsonResponse(errors_dict)
+    commands.append({'function' : "backward", 'speed' : -int(Speed)})
+    return JsonResponse({'function' : "backward", 'speed' : -int(Speed)})
