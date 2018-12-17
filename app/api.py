@@ -42,9 +42,7 @@ def getSpeed(request):
 # Thymio calls this to get the next action on Manual mode
 def nextMove(request):
     if(len(commands)):
-        res = commands[0]
-        commands.pop(0)
-        return JsonResponse(res)
+        return JsonResponse(commands.pop(0))
     else:
         return JsonResponse({'function':''})
 
