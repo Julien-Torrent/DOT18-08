@@ -29,6 +29,7 @@ urlpatterns = [
     url(r'^api/setLeds/(?P<ledsStatus>\d)', app.api.setLeds, name='setLeds'),
     url(r'^api/getLeds', app.api.getLeds, name='getLeds'),
 
+    url(r'^api/nextMove', app.api.nextMove, name='nextMove'),
     url(r'^api/forward', app.api.forward, name='forward'),
     url(r'^api/backward', app.api.backward, name='backward'),
 
