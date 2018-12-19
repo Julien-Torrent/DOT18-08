@@ -2,6 +2,49 @@
 
 {% block content %}
 
-<!-- Test -->
+<div class="content-command">
+    <div class="content-command-speed">
+        <input type="range" min="-500" max="500" value="0" class="slider" id="myRange">
+        <button type="button" id="setSpeed">Set speed</button>
+    </div>
+    
+    <div class="content-command-speed">
+        <input type="range" min="0" max="2" value="0" class="slider" id="mode">
+        <button type="button" id="setMode">Set Mode</button>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script type="text/javascript">
+
+$('#setSpeed').on("click",function(){
+    var speed = $('#myRange').val();
+
+    $.ajax({
+    type: "POST",
+    url: "api/setSpeed/" + speed,
+    success: function(data){
+         alert(speed);         
+     }
+});
+})
+
+$('#setMode').on("click",function(){
+    var mode = $('#mode').val();
+
+    $.ajax({
+    type: "POST",
+    url: "api/setMode/" + mode,
+    success: function(data){
+         alert(mode);         
+     }
+});
+})
+
+
+</script>
 
 {% endblock %}
