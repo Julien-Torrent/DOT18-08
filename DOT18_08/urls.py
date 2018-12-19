@@ -30,6 +30,8 @@ urlpatterns = [
     url(r'^api/getLeds', app.api.getLeds, name='getLeds'),
 
     url(r'^api/nextMove', app.api.nextMove, name='nextMove'),
+    url(r'^api/turnLeft/(?P<angle>\d{0,3})', app.api.turnLeft, name='turnLeft'),
+    url(r'^api/turnRight/(?P<angle>\d{0,3})', app.api.turnRight, name='turnRight'),
     url(r'^api/forward', app.api.forward, name='forward'),
     url(r'^api/backward', app.api.backward, name='backward'),
 

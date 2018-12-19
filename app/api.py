@@ -46,6 +46,15 @@ def nextMove(request):
     else:
         return JsonResponse({'function':''})
 
+# Turn Left of the requested angle
+def turnLeft(request, angle):
+    commands.append({'function' : "turnLeft", 'angle' : int(angle)})
+    return JsonResponse({'function' : "turnLeft", 'angle' : int(angle)})
+
+# Turn Right of the requested angle
+def turnRight(request, angle):
+    commands.append({'function' : "turnRight", 'angle' : int(angle)})
+    return JsonResponse({'function' : "turnRight", 'angle' : int(angle)})
 
 # getSpeed and add function name 'forward'
 def forward(request):
