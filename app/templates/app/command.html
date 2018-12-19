@@ -4,13 +4,19 @@
 
 <div class="content-command">
     <div class="content-command-speed">
-        <input type="range" min="-500" max="500" value="0" class="slider" id="myRange">
+        <input type="range" min="0" max="500" value="250" class="slider" id="myRange">
         <button type="button" id="setSpeed">Set speed</button>
     </div>
     
     <div class="content-command-speed">
         <input type="range" min="0" max="2" value="0" class="slider" id="mode">
         <button type="button" id="setMode">Set Mode</button>
+    </div>
+
+    <div class="content-command-move">
+        <button type="button" id="forward">Avancer</button>
+        <button type="button" id="backward">Reculer</button>
+        <button type="button" id="nextFunc">Check next command</button>
     </div>
 </div>
 
@@ -44,7 +50,69 @@ $('#setMode').on("click",function(){
 });
 })
 
+$('#forward').on("click",function(){
+    $.ajax({
+    type: "POST",
+    url: "api/forward/",
+    success: function(data){
+        console.log(data);         
+     }
+});
+})
 
+$('#backward').on("click",function(){
+    $.ajax({
+    type: "POST",
+    url: "api/backward/",
+    success: function(data){
+        console.log(data);         
+     }
+});
+})
+
+$('#nextFunc').on("click",function(){
+    $.ajax({
+    type: "POST",
+    url: "api/nextMove/",
+    success: function(data){
+        console.log(data);         
+     }
+});
+})
+
+//Keyboard Bindings
+$(document).keydown(function(e) {
+    switch(e.which) {
+        case 37: // left
+        break;
+
+        case 38: // up
+            $.ajax({
+                type: "POST",
+                url: "api/forward/",
+                success: function(data){
+                    console.log(data);         
+                }
+            });
+        break;
+
+        case 39: // right
+        break;
+
+        case 40: // down
+            $.ajax({
+                    type: "POST",
+                    url: "api/backward/",
+                    success: function(data){
+                        console.log(data);         
+                    }
+                });
+        break;
+
+        default: return; // exit this handler for other keys
+    }
+    e.preventDefault(); // prevent the default action (scroll / move caret)
+});
 </script>
 
 {% endblock %}
