@@ -19,6 +19,7 @@ def getLeds(request):
     global AllLedsOn
     return JsonResponse({'ledsOn' : AllLedsOn})
 
+
 def setMode(request, mode):
     global Mode
     Mode = mode
@@ -65,3 +66,11 @@ def forward(request):
 def backward(request):
     commands.append({'function' : "backward", 'speed' : -int(Speed)})
     return JsonResponse({'function' : "backward", 'speed' : -int(Speed)})
+
+# Allows the thimio to send sensor data to the server
+# method = POST + data in data:
+def sendStatus(request):
+    if request.method == 'POST':
+        data = request.body
+        #TODO : Parse the data
+    return HttpResponse(status = 200)
