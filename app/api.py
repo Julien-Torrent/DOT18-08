@@ -71,6 +71,11 @@ def backward(request):
 # method = POST + data in data:
 def sendStatus(request):
     if request.method == 'POST':
-        data = request.body
-        #TODO : Parse the data
+        #[{ "Name": "accéléromètre", "Value": 1, "TimeStamp": 12.221 }]
+        # TODO save in DB if value is different
+        for item in json.loads(request.body):
+            print(item["Name"])
+            print(item["Value"])
+            print(item["TimeStamp"])
+
     return HttpResponse(status = 200)
