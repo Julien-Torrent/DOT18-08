@@ -12,7 +12,7 @@ commands = list()
 
 def setLeds(request, ledsStatus):
     global AllLedsOn
-    AllLedsOn =  bool(ledsStatus)
+    AllLedsOn =  bool(int(ledsStatus))
     return HttpResponse(status=200)
 
 def getLeds(request):
