@@ -8,15 +8,25 @@
         <button type="button" id="setSpeed">Set speed</button>
     </div>
     
-    <div class="content-command-speed">
+    <div class="content-command-mode">
         <input type="range" min="0" max="2" value="0" class="slider" id="mode">
         <button type="button" id="setMode">Set Mode</button>
+    </div>
+
+    <div class="content-command-led">
+        <button type="button" id="setLED">Allumer les LEDs</button>
     </div>
 
     <div class="content-command-move">
         <button type="button" id="forward">Avancer</button>
         <button type="button" id="backward">Reculer</button>
         <button type="button" id="nextFunc">Check next command</button>
+    </div>
+
+    <div class="content-command-turn">
+        First name: <input type="text" name="inpDeg" id="degVal"><br>
+        <button type="button" id="setDegRight">Tourner de X° à droite</button>
+        <button type="button" id="setDegLeft">Tourner de X° à gauche</button>
     </div>
 </div>
 
@@ -26,16 +36,27 @@
 
 <script type="text/javascript">
 
+var movement = "none";
+var currentSpeed = 0;
+var lastSpeed = 0;
+var ledsOn = false;
+
 $('#setSpeed').on("click",function(){
-    var speed = $('#myRange').val();
+    
+    $.ajax({
+        type: "GET",
+        url: "api/getSpeed/",
+        success: function(data){  
+            lastSpeed = data.speed; 
+    }});
+    currentSpeed = $('#myRange').val();
 
     $.ajax({
-    type: "POST",
-    url: "api/setSpeed/" + speed,
-    success: function(data){
-         alert(speed);         
-     }
-});
+        type: "POST",
+        url: "api/setSpeed/" + currentSpeed,
+        success: function(data){   
+        }
+    });
 })
 
 $('#setMode').on("click",function(){
@@ -50,24 +71,77 @@ $('#setMode').on("click",function(){
 });
 })
 
-$('#forward').on("click",function(){
+
+$('#setDegRight').on("click",function(){
+    var deg = $('#degVal').val();
+
     $.ajax({
     type: "POST",
-    url: "api/forward/",
+    url: "api/turnRight/" + deg,
     success: function(data){
         console.log(data);         
      }
 });
 })
 
-$('#backward').on("click",function(){
+$('#setDegLeft').on("click",function(){
+    var deg = $('#degVal').val();
+
     $.ajax({
     type: "POST",
-    url: "api/backward/",
+    url: "api/turnLeft/" + deg,
     success: function(data){
         console.log(data);         
      }
 });
+})
+
+$('#forward').on("click",function(){
+
+    if(movement=="backward" || movement=="none" ){
+        $.ajax({
+            type: "POST",
+            url: "api/forward/",
+            success: function(data){
+                console.log(data);         
+            }
+        });
+        movement = "forward";
+    }else{
+        currentSpeed = $('#myRange').val();
+
+        if(currentSpeed!=lastSpeed){
+            $.ajax({
+                type: "POST",
+                url: "api/forward/",
+                success: function(data){
+                    console.log(data);         
+                }
+            });
+            movement = "forward";  
+        }
+    }
+})
+
+$('#backward').on("click",function(){
+    if(movement=="forward" || movement=="none" ){
+        $.ajax({
+            type: "POST",
+            url: "api/backward/",
+            success: function(data){
+                console.log(data);         
+            }
+        });
+        movement = "backward";
+    }else{
+        $.ajax({
+            type: "POST",
+            url: "api/setSpeed/" + 0,
+            success: function(data){        
+            }
+        });
+        movement = "none";
+    }
 })
 
 $('#nextFunc').on("click",function(){
@@ -78,6 +152,31 @@ $('#nextFunc').on("click",function(){
         console.log(data);         
      }
 });
+})
+
+$('#setLED').on("click",function(){
+    $.ajax({
+    type: "POST",
+    url: "api/setLeds/" + Number(ledsOn),
+    success: function(data){
+        console.log(data);   
+        ledsOn = !ledsOn;     
+        var html = ledsOn ? "Eteindre les LEDs" : "Allumer les LEDs";
+        $("#setLED").html(html); 
+     }
+});
+})
+
+$(document).ready(function(){
+    $.ajax({
+        type: "GET",
+        url: "api/getLeds/",
+        success: function(data){
+            ledsOn = data.ledsOn;   
+            var html = ledsOn ? "Eteindre les LEDs" : "Allumer les LEDs";
+            $("#setLED").html(html); 
+        }
+    });
 })
 
 //Keyboard Bindings
