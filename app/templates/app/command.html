@@ -42,7 +42,8 @@ var lastSpeed = 0;
 var ledsOn = false;
 
 $('#setSpeed').on("click",function(){
-    
+
+    //test if speeed different -> forward / backward
     $.ajax({
         type: "GET",
         url: "api/getSpeed/",
@@ -98,7 +99,8 @@ $('#setDegLeft').on("click",function(){
 
 $('#forward').on("click",function(){
 
-    if(movement=="backward" || movement=="none" ){
+    if ((movement == "backward" || movement == "none") && mode == 1)
+    {
         $.ajax({
             type: "POST",
             url: "api/forward/",
@@ -108,23 +110,19 @@ $('#forward').on("click",function(){
         });
         movement = "forward";
     }else{
-        currentSpeed = $('#myRange').val();
-
-        if(currentSpeed!=lastSpeed){
-            $.ajax({
-                type: "POST",
-                url: "api/forward/",
-                success: function(data){
-                    console.log(data);         
-                }
-            });
-            movement = "forward";  
-        }
+        $.ajax({
+            type: "POST",
+            url: "api/setSpeed/" + 0,
+            success: function(data){        
+            }
+        });
+        movement = "none";
     }
 })
 
 $('#backward').on("click",function(){
-    if(movement=="forward" || movement=="none" ){
+    if ((movement == "forward" || movement == "none") && mode == 1)
+    {
         $.ajax({
             type: "POST",
             url: "api/backward/",
