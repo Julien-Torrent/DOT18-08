@@ -40,14 +40,14 @@ var movement = "none";
 var currentSpeed = 0;
 var lastSpeed = 0;
 var ledsOn = false;
+var mode = 0;
 
 $('#setSpeed').on("click",function(){
 
-    //test if speeed different -> forward / backward
     $.ajax({
-        type: "GET",
-        url: "api/getSpeed/",
-        success: function(data){  
+    type: "GET",
+    url: "api/getSpeed/",
+    success: function (data) {  
             lastSpeed = data.speed; 
     }});
     currentSpeed = $('#myRange').val();
@@ -58,10 +58,32 @@ $('#setSpeed').on("click",function(){
         success: function(data){   
         }
     });
+
+
+    if (movement == "forward")
+    {
+         $.ajax({
+            type: "POST",
+            url: "api/forward/",
+            success: function(data){
+                console.log(data);         
+            }
+        });
+    }
+    else if (movement == "backward")
+    {
+        $.ajax({
+            type: "POST",
+            url: "api/backward/",
+            success: function(data){
+                console.log(data);         
+            }
+        });
+    }
 })
 
 $('#setMode').on("click",function(){
-    var mode = $('#mode').val();
+    mode = $('#mode').val();
 
     $.ajax({
     type: "POST",
@@ -103,6 +125,13 @@ $('#forward').on("click",function(){
     {
         $.ajax({
             type: "POST",
+            url: "api/setSpeed/" + currentSpeed,
+            success: function(data){        
+            }
+        });
+
+        $.ajax({
+            type: "POST",
             url: "api/forward/",
             success: function(data){
                 console.log(data);         
@@ -123,6 +152,13 @@ $('#forward').on("click",function(){
 $('#backward').on("click",function(){
     if ((movement == "forward" || movement == "none") && mode == 1)
     {
+        $.ajax({
+            type: "POST",
+            url: "api/setSpeed/" + currentSpeed,
+            success: function(data){        
+            }
+        });
+
         $.ajax({
             type: "POST",
             url: "api/backward/",
