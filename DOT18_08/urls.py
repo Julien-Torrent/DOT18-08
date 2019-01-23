@@ -36,6 +36,7 @@ urlpatterns = [
     url(r'^api/backward', app.api.backward, name='backward'),
 
     url(r'^api/sendStatus', app.api.sendStatus, name='sendStatus'),
+    url(r'^api/getStatus', app.api.getStatus, name='getStatus'),
 
     # Admin :
     url(r'^admin/', admin.site.urls),
