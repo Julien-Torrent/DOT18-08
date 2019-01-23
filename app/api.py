@@ -9,6 +9,7 @@ Speed = 0           # 0 to 1000 0=Stopped, 1000=Full Speed
 AllLedsOn = False   # False = éteint, True = allumé
 
 commands = list()
+values = list()
 
 def setLeds(request, ledsStatus):
     global AllLedsOn
@@ -72,10 +73,12 @@ def backward(request):
 def sendStatus(request):
     if request.method == 'POST':
         #[{ "Name": "accéléromètre", "Value": 1, "TimeStamp": 12.221 }]
-        # TODO save in DB if value is different
+        values.clear()
+
         for item in json.loads(request.body):
-            print(item["Name"])
-            print(item["Value"])
-            print(item["TimeStamp"])
+            values.append(item)
 
     return HttpResponse(status = 200)
+
+def getStatus(request):
+    return JsonResponse(values, safe=False)
