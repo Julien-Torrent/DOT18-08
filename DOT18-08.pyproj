@@ -57,6 +57,11 @@
     <Folder Include="DOT18_08\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app\static\app\content\AdminLTE.css" />
+    <Content Include="app\static\app\content\adminlte.css.map" />
+    <Content Include="app\static\app\content\AdminLTE.min.css" />
+    <Content Include="app\static\app\content\adminlte.min.css.map" />
+    <Content Include="app\static\app\content\_all-skins.min.css" />
     <Content Include="app\templates\app\command.html" />
     <Content Include="requirements.txt" />
     <Content Include="db.sqlite3" />
