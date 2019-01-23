@@ -100,10 +100,28 @@
             </div>
 			</div>
           </div>
-		</div>
-      </div>
     </section>
-  </div>
 </div>
 
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        setInterval(function () {
+            $.ajax({
+                type: "GET",
+                url: "api/getStatus",
+                success: function (data) {
+                    for (var i = 0; i < data.length; i++)
+                    {
+                        console.log(data[i]);
+                    }
+                }
+            });
+        }, 2000);
+    })
+   
+</script>
 {% endblock %}
