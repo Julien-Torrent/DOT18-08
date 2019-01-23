@@ -8,81 +8,83 @@
 	  <div>
       <div class="row">
         <div class="col-lg-6 col-xs-6">
-          <!-- small box -->
+          <div class="small-box bg-blue">
+            <div class="inner">
+              <h3>Microphone</h3>
+                 <p>current state : <span id="MicIntensity">--</span> <span id="MicIntensityts">00.00.0000 00:00:00</span></p>
+			     <p>previous state : <span id="pMicIntensity">--</span> <span id="pMicIntensityts">00.00.0000 00:00:00</span></p>
+            </div>
+          </div>
+        </div>
+
+          
+        <div class="col-lg-6 col-xs-6">
+          <div class="small-box bg-yellow">
+            <div class="inner">
+              <h3>Temperature</h3>
+                 <p>current state : <span id="Temperature">--</span> <span id="Temperaturets">00.00.0000 00:00:00</span></p>
+			     <p>previous state : <span id="pTemperature">--</span> <span id="pTemperaturets">00.00.0000 00:00:00</span></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6 col-xs-6">
           <div class="small-box bg-aqua">
             <div class="inner">
               <h3>Proximity</h3>
-              <p>current state :</p>
+              <p>current state : </p>
 			  <p>previous state :</p>
             </div>
           </div>
         </div>
-        <!-- ./col -->
+
         <div class="col-lg-6 col-xs-6">
-          <!-- small box -->
           <div class="small-box bg-green">
             <div class="inner">
-              <h3>Accelerometer<sup style="font-size: 20px"></sup></h3>
-                <p>current state :</p>
-			    <p>previous state :</p>
+              <h3>Accelerometer</h3>
+                <p><b>X :</b></p>
+                <p>current state : <span id="AccelerometerX">--</span> <span id="AccelerometerXts">00.00.0000 00:00:00</span></p>
+			    <p>previous state : <span id="pAccelerometerX">--</span> <span id="pAccelerometerXts">00.00.0000 00:00:00</span></p>
+
+                <p><b>Y :</b></p>
+                <p>current state : <span id="AccelerometerY">--</span> <span id="AccelerometerYts">00.00.0000 00:00:00</span></p>
+			    <p>previous state : <span id="pAccelerometerY">--</span> <span id="pAccelerometerYts">00.00.0000 00:00:00</span></p>
+
+                <p><b>Z :</b></p>
+                <p>current state : <span id="AccelerometerZ">--</span> <span id="AccelerometerZts">00.00.0000 00:00:00</span></p>
+			    <p>previous state : <span id="pAccelerometerZ">--</span> <span id="pAccelerometerZts">00.00.0000 00:00:00</span></p>
             </div>  
           </div>
         </div>
     </div>
     <br /> <br /> 
-    <h2>Actuators</h2> 
-		<div>
-        <!-- ./col -->
+
+
+    <h2>Actuators</h2>         
         <div class="col-lg-6 col-xs-6">
-          <!-- small box -->
-          <div class="small-box bg-yellow">
-            <div class="inner">
-              <h3>Front LED</h3>
-                 <p>current state :</p>
-			     <p>previous state :</p>
-            </div>
-          </div>
-        </div>
-        <!-- ./col -->
-        <div class="col-lg-6 col-xs-6">
-          <!-- small box -->
           <div class="small-box bg-red">
             <div class="inner">
-              <h3>Up LED</h3>
+              <h3>LED</h3>
                 <p>current state :</p>
 			    <p>previous state :</p>
             </div>
           </div>
         </div>
 		</div>
-        <!-- ./col -->
-      </div>
-	  
-	   <div class="col-lg-6 col-xs-6">
-          <!-- small box -->
-          <div class="small-box bg-blue">
-            <div class="inner">
-              <h3>Sound Generator</h3>
-                 <p>current state :</p>
-			     <p>previous state :</p>
-            </div>
-          </div>
+	 
+		
+		
+	    <div class="col-lg-6 col-xs-6">
+        <div class="small-box bg-green">
+        <div class="inner">
+            <h3>Distance traveled </h3>
+                <p>current state :</p>
+			    <p>previous state :</p>
         </div>
-		
-		
-		  <div class="col-lg-6 col-xs-6">
-          <!-- small box -->
-          <div class="small-box bg-green">
-            <div class="inner">
-              <h3>Distance traveled </h3>
-                  <p>current state :</p>
-			      <p>previous state :</p>
-            </div>
-          </div>
-		  </div>
-		  <br /> <br />
+        </div>
+	    </div>
+
           <div class="col-lg-6 col-xs-6">
-          <!-- small box -->
           <div class="small-box bg-blue">
             <div class="inner">
             <h3>Obstacles encountered</h3>
@@ -91,6 +93,7 @@
             </div>
           </div>
         </div>
+
 			<div class="col-lg-6 col-xs-6">
 		    <div class="small-box bg-yellow">
             <div class="inner">
@@ -103,10 +106,25 @@
     </section>
 </div>
 
+<button id="test">test</button>
+
 {% endblock %}
 
 {% block scripts %}
 <script type="text/javascript">
+
+$('#test').on("click",function(){
+    $.ajax({
+    type: "POST",
+    url: "api/sendStatus",
+    data: '[{ "Name": "Temperature", "Value": 340, "TimeStamp": "23.01.2018 20:48:00" }, { "Name": "MicIntensity", "Value": 500, "TimeStamp": "23.01.2018 20:48:00" }, { "Name": "AccelerometerX", "Value": 0, "TimeStamp": "23.01.2018 20:48:00" }, { "Name": "AccelerometerY", "Value": 1, "TimeStamp": "23.01.2018 20:48:00" }, { "Name": "AccelerometerZ", "Value": 2, "TimeStamp": "23.01.2018 20:48:00" }, { "Name": "prox_h_0", "Value": 0, "TimeStamp": "23.01.2018 20:48:00" }, { "Name": "prox_h_1", "Value": 1, "TimeStamp": "23.01.2018 20:48:00" }, { "Name": "prox_h_2", "Value": 2, "TimeStamp": "23.01.2018 20:48:00" }, { "Name": "prox_h_3", "Value": 3, "TimeStamp": "23.01.2018 20:48:00" }, { "Name": "prox_h_4", "Value": 4, "TimeStamp": "23.01.2018 20:48:00" }, { "Name": "prox_h_5", "Value": 5, "TimeStamp": "23.01.2018 20:48:00" }, { "Name": "prox_h_5", "Value": 6, "TimeStamp": "23.01.2018 20:48:00" }, { "Name": "prox_v_0", "Value": 0, "TimeStamp": "23.01.2018 20:48:00" }, { "Name": "prox_v_1", "Value": 1, "TimeStamp": "23.01.2018 20:48:00" }]',
+    success: function(data){
+        console.log(data);         
+     }
+});
+})
+
+
 
     $(document).ready(function () {
         setInterval(function () {
@@ -116,7 +134,14 @@
                 success: function (data) {
                     for (var i = 0; i < data.length; i++)
                     {
-                        console.log(data[i]);
+                        if ($("#" + data[i]["Name"]).text() != data[i]["Value"].toString())
+                        {
+                            $("#p" + data[i]["Name"]).text($("#" + data[i]["Name"]).text());
+                            $("#" + data[i]["Name"]).text(data[i]["Value"]);
+
+                            $("#p" + data[i]["Name"]+"ts").text($("#" + data[i]["Name"]+"ts").text());
+                            $("#" + data[i]["Name"]+"ts").text(data[i]["TimeStamp"]);
+                        }
                     }
                 }
             });
