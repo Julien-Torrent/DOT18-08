@@ -2,33 +2,67 @@
 
 {% block content %}
 
-<div class="content-command">
-    <div class="content-command-speed">
-        <input type="range" min="0" max="500" value="250" class="slider" id="myRange">
-        <button type="button" id="setSpeed">Set speed</button>
+<div class="row">
+    <div class="col-md-2">
+        <h3>Set speed</h3>
+
+        <input type="range" min="0" max="500" value="250" class="slider" id="rangeSpeed">
+        <span id="spNewSpeed">Speed : 0</span><br/>
+        <span id="spCurrentValue">Current speed : 0</span><br />
+        <button type="button" id="setSpeed">Change speed</button>
+
+        <hr>
+
+        <h3>Change Mode</h3>
+
+        <input type="radio" name="mode" id="rdbMan" value="1">Manual<br>
+        <input type="radio" name="mode" id="rdbAuto" value="2">Auto<br>
+
     </div>
-    
-    <div class="content-command-mode">
-        <input type="range" min="0" max="2" value="0" class="slider" id="mode">
-        <button type="button" id="setMode">Set Mode</button>
+    <div class="col-md-8 content-command animated fadeInUp"> 
+        <div class="row firstRow">
+            <div class="col-md-2 offset-1">
+                <button type="button" class="btnMove" id="forward"></button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-1 offset-3">
+                <button type="button" class="btnMove" id="setDegLeft"></button>
+            </div>
+            <div class="col-md-1 separator">
+            </div>
+            <div class="col-md-1">
+                <input type="number" min="0" step="1" name="inpDeg" value="0" class="txtDegrees" id="degVal">                           
+            </div>
+            <div class="col-md-1 separator">
+            </div>
+            <div class="col-md-1">
+                <button type="button" class="btnMove" id="setDegRight"></button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2 offset-1">
+                <button type="button" class="btnMove" id="backward"></button>
+            </div>
+        </div>
+        
     </div>
 
-    <div class="content-command-led">
+    <div class="col-md-2 textRight">
+        <h3>Control Panel</h3>
         <button type="button" id="setLED">Allumer les LEDs</button>
+        <button type="button" id="resetData">Reset Thymio</button>
+
+        <hr>
+
+        <h3>Debug</h3>
+        <button type="button" id="printFunc">Check command</button>
+        <button type="button" id="returnRobot">Retour départ</button>
+
     </div>
 
-    <div class="content-command-move">
-        <button type="button" id="forward">Avancer</button>
-        <button type="button" id="backward">Reculer</button>
-        <button type="button" id="nextFunc">Check next command</button>
-    </div>
-
-    <div class="content-command-turn">
-        First name: <input type="text" name="inpDeg" id="degVal"><br>
-        <button type="button" id="setDegRight">Tourner de X° à droite</button>
-        <button type="button" id="setDegLeft">Tourner de X° à gauche</button>
-    </div>
-</div>
+</div> 
+        
 
 {% endblock %}
 
@@ -42,166 +76,41 @@ var lastSpeed = 0;
 var ledsOn = false;
 var mode = 0;
 
-$('#setSpeed').on("click",function(){
+//Commandes du robot
+var command = [];
 
-    $.ajax({
-    type: "GET",
-    url: "api/getSpeed/",
-    success: function (data) {  
-            lastSpeed = data.speed; 
-    }});
-    currentSpeed = $('#myRange').val();
+//Timer
+var timer = 0;
+var tDebut = 0;
+var tFin = 0;
 
+//********************************************************//
+// Get values from server and initialize local variables 
+//********************************************************//
+$(document).ready(function(){
     $.ajax({
-        type: "POST",
-        url: "api/setSpeed/" + currentSpeed,
-        success: function(data){   
+        type: "GET",
+        url: "api/getSpeed/",
+        success: function(data){
+            currentSpeed = data.speed;
+            $("#rangeSpeed").val(data.speed);
+            $("#spCurrentValue").text("Current speed : "+currentSpeed);
+            $("#spNewSpeed").text("Speed : "+currentSpeed);
         }
     });
 
-
-    if (movement == "forward")
-    {
-         $.ajax({
-            type: "POST",
-            url: "api/forward/",
-            success: function(data){
-                console.log(data);         
-            }
-        });
-    }
-    else if (movement == "backward")
-    {
-        $.ajax({
-            type: "POST",
-            url: "api/backward/",
-            success: function(data){
-                console.log(data);         
-            }
-        });
-    }
-})
-
-$('#setMode').on("click",function(){
-    mode = $('#mode').val();
-
     $.ajax({
-    type: "POST",
-    url: "api/setMode/" + mode,
-    success: function(data){
-         alert(mode);         
-     }
-});
-})
-
-
-$('#setDegRight').on("click",function(){
-    var deg = $('#degVal').val();
-
-    $.ajax({
-    type: "POST",
-    url: "api/turnRight/" + deg,
-    success: function(data){
-        console.log(data);         
-     }
-});
-})
-
-$('#setDegLeft').on("click",function(){
-    var deg = $('#degVal').val();
-
-    $.ajax({
-    type: "POST",
-    url: "api/turnLeft/" + deg,
-    success: function(data){
-        console.log(data);         
-     }
-});
-})
-
-$('#forward').on("click",function(){
-
-    if ((movement == "backward" || movement == "none") && mode == 1)
-    {
-        $.ajax({
-            type: "POST",
-            url: "api/setSpeed/" + currentSpeed,
-            success: function(data){        
+        type: "GET",
+        url: "api/getMode/",
+        success: function(data){
+            if(data.mode == 1){
+                $("#rdbMan").attr('checked', 'checked');
+            }else if(data.mode == 2){
+                $("#rdbAuto").attr('checked', 'checked');
             }
-        });
-
-        $.ajax({
-            type: "POST",
-            url: "api/forward/",
-            success: function(data){
-                console.log(data);         
-            }
-        });
-        movement = "forward";
-    }else{
-        $.ajax({
-            type: "POST",
-            url: "api/setSpeed/" + 0,
-            success: function(data){        
-            }
-        });
-        movement = "none";
-    }
-})
-
-$('#backward').on("click",function(){
-    if ((movement == "forward" || movement == "none") && mode == 1)
-    {
-        $.ajax({
-            type: "POST",
-            url: "api/setSpeed/" + currentSpeed,
-            success: function(data){        
-            }
-        });
-
-        $.ajax({
-            type: "POST",
-            url: "api/backward/",
-            success: function(data){
-                console.log(data);         
-            }
-        });
-        movement = "backward";
-    }else{
-        $.ajax({
-            type: "POST",
-            url: "api/setSpeed/" + 0,
-            success: function(data){        
-            }
-        });
-        movement = "none";
-    }
-})
-
-$('#nextFunc').on("click",function(){
-    $.ajax({
-    type: "POST",
-    url: "api/nextMove/",
-    success: function(data){
-        console.log(data);         
-     }
-});
-})
-
-$('#setLED').on("click",function(){
-    $.ajax({
-    type: "POST",
-    url: "api/setLeds/" + Number(ledsOn),
-    success: function(data){
-        console.log(data);   
-        ledsOn = !ledsOn;     
-        var html = ledsOn ? "Eteindre les LEDs" : "Allumer les LEDs";
-        $("#setLED").html(html); 
-     }
-});
-})
-
-$(document).ready(function(){
+        }
+    });
+    
     $.ajax({
         type: "GET",
         url: "api/getLeds/",
@@ -211,9 +120,279 @@ $(document).ready(function(){
             $("#setLED").html(html); 
         }
     });
+
 })
 
-//Keyboard Bindings
+//********************************************************//
+// ROBOT ACTIONS 
+//********************************************************//
+
+// Define speed 
+
+$('#rangeSpeed').on("change mousemove", function() {
+    $("#spNewSpeed").text("Speed : "+$('#rangeSpeed').val());
+});
+
+$('#setSpeed').on("click",function(){
+
+    $.ajax({
+    type: "GET",
+    url: "api/getSpeed/",
+    success: function (data) {  
+            lastSpeed = data.speed; 
+    }});
+    currentSpeed = $('#rangeSpeed').val();
+
+    $.ajax({
+        type: "POST",
+        url: "api/setSpeed/" + currentSpeed,
+        success: function(data){   
+            
+        }
+    });
+
+    $("#spCurrentValue").text("Current speed : "+currentSpeed);
+
+
+    if (movement == "forward")
+    {
+         $.ajax({
+            type: "POST",
+            url: "api/forward/",
+            success: function(data){
+                //addCommand(command,"speed",currentSpeed);
+                //addCommand(command,"forward",0);    
+            }
+        });
+    }
+    else if (movement == "backward")
+    {
+        $.ajax({
+            type: "POST",
+            url: "api/backward/",
+            success: function(data){
+                //console.log(data); 
+                //addCommand(command,"speed",currentSpeed);
+                //addCommand(command,"backward",0);      
+            }
+        });
+    }
+})
+
+// Define mode
+$('#rdbMan').on("click",function(){
+    mode = 1;
+
+    $.ajax({
+    type: "POST",
+    url: "api/setMode/" + mode,
+    success: function(data){
+         //alert(mode);         
+     }
+});
+})
+
+$('#rdbAuto').on("click",function(){
+    mode = 2;
+
+    $.ajax({
+    type: "POST",
+    url: "api/setMode/" + mode,
+    success: function(data){
+         //alert(mode);         
+     }
+});
+})
+
+// Set Leds ON/OFF
+$('#setLED').on("click",function(){
+    ledsOn = !ledsOn;
+    $.ajax({
+    type: "POST",
+    url: "api/setLeds/" + Number(ledsOn),
+    success: function(data){ 
+        var html = ledsOn ? "Eteindre les LEDs" : "Allumer les LEDs";
+        $("#setLED").html(html); 
+     }
+});
+})
+
+// Rotate X° right
+$('#setDegRight').on("click",function(){
+    var deg = $('#degVal').val();
+
+    $.ajax({
+        type: "POST",
+        url: "api/turnRight/" + deg,
+        success: function(data){
+            
+        }
+    });
+
+    if (movement == "forward")
+    {
+         $.ajax({
+            type: "POST",
+            url: "api/forward/",
+            success: function(data){
+                //Stopper mouvement précédent et commencer nouveau
+                //timerStopMovement("forward");
+                //Tourner
+                //addCommand(command,"turnRight",deg);
+                //Commencer nouveau
+                //timerStartMovement();
+            }
+        });
+    }
+    else if (movement == "backward")
+    {
+        $.ajax({
+            type: "POST",
+            url: "api/backward/",
+            success: function(data){
+                //Stopper mouvement précédent et commencer nouveau
+                //timerStopMovement("backward");
+                //Tourner
+               // addCommand(command,"turnRight",deg);
+                //Commencer nouveau
+                //timerStartMovement()    
+            }
+        });
+    }else{
+        //Tourner
+        addCommand(command,"turnRight",deg);
+    }
+})
+
+// Rotate X° left
+$('#setDegLeft').on("click",function(){
+    var deg = $('#degVal').val();
+
+    $.ajax({
+        type: "POST",
+        url: "api/turnLeft/" + deg,
+        success: function(data){
+            addCommand(command,"turnLeft",deg);         
+        }
+    });
+
+    if (movement == "forward")
+    {
+         $.ajax({
+            type: "POST",
+            url: "api/forward/",
+            success: function(data){
+                //Stopper mouvement précédent et commencer nouveau
+               // timerStopMovement("forward");
+                //Commencer nouveau
+                //timerStartMovement()
+            }
+        });
+    }
+    else if (movement == "backward")
+    {
+        $.ajax({
+            type: "POST",
+            url: "api/backward/",
+            success: function(data){
+                //Stopper mouvement précédent et commencer nouveau
+                //timerStopMovement("backward");
+                //Commencer nouveau
+                //timerStartMovement()
+            }
+        });
+    }
+})
+
+// Move robot forward
+$('#forward').on("click",function(){
+    if ((movement == "backward" || movement == "none") && mode == 1)
+    {
+        $.ajax({
+            type: "POST",
+            url: "api/setSpeed/" + currentSpeed,
+            success: function(data){
+                
+            }
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "api/forward/",
+            success: function(data){
+                //timerStartMovement();
+                         
+            }
+        });
+        movement = "forward";
+    }else{
+        $.ajax({
+            type: "POST",
+            url: "api/setSpeed/" + 0,
+            success: function(data){
+                //timerStopMovement("forward");     
+            }
+        });
+        movement = "none";
+    }
+})
+
+// Move robot backward
+$('#backward').on("click",function(){
+    if ((movement == "forward" || movement == "none") && mode == 1)
+    {
+        $.ajax({
+            type: "POST",
+            url: "api/setSpeed/" + currentSpeed,
+            success: function(data){   
+                
+            }
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "api/backward/",
+            success: function(data){     
+            }
+        });
+        movement = "backward";
+    }else{
+        $.ajax({
+            type: "POST",
+            url: "api/setSpeed/" + 0,
+            success: function(data){ 
+            }
+        });
+        movement = "none";
+    }
+})
+
+// Check command made
+$("#printFunc").on("click",function(){
+    console.log(command);
+});
+
+//Execute commands to return to starting point
+$("#returnRobot").on("click",function(){
+    //Retourner le robot
+    $.ajax({
+        type: "POST",
+        url: "api/turnRight/" + 180,
+        success: function(data){
+            execCommand();
+        }
+    });
+    
+});
+
+//********************************************************//
+// END ROBOT ACTIONS 
+//********************************************************//
+
+//********************************************************//
+// KEYBOARD BINDINGS
+//********************************************************//
+
 $(document).keydown(function(e) {
     switch(e.which) {
         case 37: // left
@@ -246,6 +425,111 @@ $(document).keydown(function(e) {
     }
     e.preventDefault(); // prevent the default action (scroll / move caret)
 });
+
+//********************************************************//
+// END KEYBOARD BINDINGS
+//********************************************************//
+
+//********************************************************//
+// FUNCTIONS
+//********************************************************//
+
+function addCommand(dict, key, value){
+    dict.push({
+        key:   key,
+        value: value
+    });
+}
+
+function execCommand(){
+    for (var cmd in command) { 
+        switch(command[cmd].key) {
+            case "speed":
+                $.ajax({
+                    type: "POST",
+                    url: "api/setSpeed/" + command[cmd].value,
+                    success: function(data){ }
+                });
+                break;
+            case "forward":
+                $.ajax({
+                    type: "POST",
+                    url: "api/forward/",
+                    success: function(data){ }
+                });
+
+                $.ajax({
+                    type: "POST",
+                    url: "api/setSpeed/" + 0,
+                    beforeSend: function(){
+                        setTimeout(function(){},command[cmd].value);
+                    },
+                    success: function(data){}
+                });
+                break;
+            case "backward":
+                $.ajax({
+                    type: "POST",
+                    url: "api/backward/",
+                    success: function(data){ }
+                });
+
+                $.ajax({
+                    type: "POST",
+                    url: "api/setSpeed/" + 0,
+                    beforeSend: function(){
+                        setTimeout(function(){},command[cmd].value);
+                    },
+                    success: function(data){}
+                });
+                break;
+            case "turnRight":
+                $.ajax({
+                    type: "POST",
+                    url: "api/turnRight/" + command[cmd].value,
+                    success: function(data){ }
+                });
+                break;
+            case "turnLeft":
+                $.ajax({
+                    type: "POST",
+                    url: "api/turnRight/" + command[cmd].value,
+                    success: function(data){ }
+                });
+                break;  
+            default:
+                break;
+        }        
+    }
+}
+
+function timerStartMovement(){
+    tDebut = Date.now();
+}
+
+function timerStopMovement(movement){
+    tFin = Date.now();
+    timer = tFin - tDebut;
+    addCommand(command,"speed",currentSpeed); 
+    addCommand(command,movement,timer); 
+        
+    tDebut = 0;
+    tFin = 0;
+    timer = 0;
+}
+
+function forward(){
+
+}
+
+function backward(){
+
+}
+
+//********************************************************//
+// END FUNCTIONS
+//********************************************************//
+
 </script>
 
 {% endblock %}
