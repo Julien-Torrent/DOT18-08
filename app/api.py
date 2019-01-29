@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 import json
 
-Mode = 0            # Current Mode 0=Manual, 1=FullForward, 2=Automatic
+Mode = 1            # Current Mode 0=Manual, 1=FullForward, 2=Automatic
 Speed = 0           # 0 to 1000 0=Stopped, 1000=Full Speed
 AllLedsOn = False   # False = éteint, True = allumé
 
