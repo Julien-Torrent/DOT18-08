@@ -103,9 +103,10 @@ $(document).ready(function(){
         type: "GET",
         url: "api/getMode/",
         success: function(data){
-            if(data.mode == 1){
+            mode = data.mode;
+            if(mode == 1){
                 $("#rdbMan").attr('checked', 'checked');
-            }else if(data.mode == 2){
+            }else if(mode == 2){
                 $("#rdbAuto").attr('checked', 'checked');
             }
         }
@@ -219,86 +220,29 @@ $('#setLED').on("click",function(){
 
 // Rotate X° right
 $('#setDegRight').on("click",function(){
-    var deg = $('#degVal').val();
+    if(mode==1){
+        var deg = $('#degVal').val();
 
-    $.ajax({
-        type: "POST",
-        url: "api/turnRight/" + deg,
-        success: function(data){
-            
-        }
-    });
-
-    if (movement == "forward")
-    {
-         $.ajax({
-            type: "POST",
-            url: "api/forward/",
-            success: function(data){
-                //Stopper mouvement précédent et commencer nouveau
-                //timerStopMovement("forward");
-                //Tourner
-                //addCommand(command,"turnRight",deg);
-                //Commencer nouveau
-                //timerStartMovement();
-            }
-        });
-    }
-    else if (movement == "backward")
-    {
         $.ajax({
             type: "POST",
-            url: "api/backward/",
+            url: "api/turnRight/" + deg,
             success: function(data){
-                //Stopper mouvement précédent et commencer nouveau
-                //timerStopMovement("backward");
-                //Tourner
-               // addCommand(command,"turnRight",deg);
-                //Commencer nouveau
-                //timerStartMovement()    
+                
             }
         });
-    }else{
-        //Tourner
-        addCommand(command,"turnRight",deg);
     }
 })
 
 // Rotate X° left
 $('#setDegLeft').on("click",function(){
-    var deg = $('#degVal').val();
+    if(mode == 1){
+        var deg = $('#degVal').val();
 
-    $.ajax({
-        type: "POST",
-        url: "api/turnLeft/" + deg,
-        success: function(data){
-            addCommand(command,"turnLeft",deg);         
-        }
-    });
-
-    if (movement == "forward")
-    {
-         $.ajax({
-            type: "POST",
-            url: "api/forward/",
-            success: function(data){
-                //Stopper mouvement précédent et commencer nouveau
-               // timerStopMovement("forward");
-                //Commencer nouveau
-                //timerStartMovement()
-            }
-        });
-    }
-    else if (movement == "backward")
-    {
         $.ajax({
             type: "POST",
-            url: "api/backward/",
+            url: "api/turnLeft/" + deg,
             success: function(data){
-                //Stopper mouvement précédent et commencer nouveau
-                //timerStopMovement("backward");
-                //Commencer nouveau
-                //timerStartMovement()
+                //addCommand(command,"turnLeft",deg);         
             }
         });
     }
@@ -306,80 +250,88 @@ $('#setDegLeft').on("click",function(){
 
 // Move robot forward
 $('#forward').on("click",function(){
-    if ((movement == "backward" || movement == "none") && mode == 1)
-    {
-        $.ajax({
-            type: "POST",
-            url: "api/setSpeed/" + currentSpeed,
-            success: function(data){
-                
-            }
-        });
 
-        $.ajax({
-            type: "POST",
-            url: "api/forward/",
-            success: function(data){
-                //timerStartMovement();
-                         
-            }
-        });
-        movement = "forward";
-    }else{
-        $.ajax({
-            type: "POST",
-            url: "api/setSpeed/" + 0,
-            success: function(data){
-                //timerStopMovement("forward");     
-            }
-        });
+    if(mode == 1){
+        if (movement == "backward" || movement == "none")
+        {
+            $.ajax({
+                type: "POST",
+                url: "api/setSpeed/" + currentSpeed,
+                success: function(data){
+                    
+                }
+            });
 
-        $.ajax({
-            type: "POST",
-            url: "api/forward/",
-            success: function(data){
-                console.log(data);         
-            }
-        });
-        movement = "none";
+            $.ajax({
+                type: "POST",
+                url: "api/forward/",
+                success: function(data){
+                    //timerStartMovement();
+                    console.log(data);        
+                }
+            });
+            movement = "forward";
+        }else{
+            $.ajax({
+                type: "POST",
+                url: "api/setSpeed/" + 0,
+                success: function(data){
+                    //timerStopMovement("forward");     
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: "api/forward/",
+                success: function(data){
+                    console.log(data);         
+                }
+            });
+            movement = "none";
+        }
     }
+
+    
 })
 
 // Move robot backward
 $('#backward').on("click",function(){
-    if ((movement == "forward" || movement == "none") && mode == 1)
-    {
-        $.ajax({
-            type: "POST",
-            url: "api/setSpeed/" + currentSpeed,
-            success: function(data){   
-                
-            }
-        });
+    if(mode == 1){
+        if (movement == "forward" || movement == "none")
+        {
+            $.ajax({
+                type: "POST",
+                url: "api/setSpeed/" + currentSpeed,
+                success: function(data){   
+                    
+                }
+            });
 
-        $.ajax({
-            type: "POST",
-            url: "api/backward/",
-            success: function(data){     
-            }
-        });
-        movement = "backward";
-    }else{
-        $.ajax({
-            type: "POST",
-            url: "api/setSpeed/" + 0,
-            success: function(data){ 
-            }
-        });
+            $.ajax({
+                type: "POST",
+                url: "api/backward/",
+                success: function(data){    
+                    console.log(data); 
+                }
+            });
+            movement = "backward";
+        }else{
+            $.ajax({
+                type: "POST",
+                url: "api/setSpeed/" + 0,
+                success: function(data){ 
+                }
+            });
 
-        $.ajax({
-            type: "POST",
-            url: "api/backward/",
-            success: function(data){
-                console.log(data);         
-            }
-        });
-        movement = "none";
+            $.ajax({
+                type: "POST",
+                url: "api/backward/",
+                success: function(data){
+                    console.log(data);         
+                }
+            });
+            movement = "none";
+        }
     }
 })
 
@@ -403,47 +355,6 @@ $("#returnRobot").on("click",function(){
 
 //********************************************************//
 // END ROBOT ACTIONS 
-//********************************************************//
-
-//********************************************************//
-// KEYBOARD BINDINGS
-//********************************************************//
-
-$(document).keydown(function(e) {
-    switch(e.which) {
-        case 37: // left
-        break;
-
-        case 38: // up
-            $.ajax({
-                type: "POST",
-                url: "api/forward/",
-                success: function(data){
-                    console.log(data);         
-                }
-            });
-        break;
-
-        case 39: // right
-        break;
-
-        case 40: // down
-            $.ajax({
-                    type: "POST",
-                    url: "api/backward/",
-                    success: function(data){
-                        console.log(data);         
-                    }
-                });
-        break;
-
-        default: return; // exit this handler for other keys
-    }
-    e.preventDefault(); // prevent the default action (scroll / move caret)
-});
-
-//********************************************************//
-// END KEYBOARD BINDINGS
 //********************************************************//
 
 //********************************************************//
