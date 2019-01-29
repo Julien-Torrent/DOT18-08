@@ -4,9 +4,11 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 import json
 
-Mode = 0            # Current Mode 0=Manual, 1=FullForward, 2=Automatic
+Mode = 1            # Current Mode 0=Manual, 1=FullForward, 2=Automatic
 Speed = 0           # 0 to 1000 0=Stopped, 1000=Full Speed
 AllLedsOn = False   # False = éteint, True = allumé
+ResetCounter = False #False = no reset, True = Reset needed
+
 
 commands = list()
 values = list()
@@ -40,6 +42,17 @@ def getSpeed(request):
     global Speed
     return JsonResponse({'speed': Speed})
 
+# Thymio set this to false when it has reseted counters
+# Webpage set this to true to indicate the VM should reset counters
+def setReset(request, resetStatus):
+    global ResetCounter
+    ResetCounter = bool(int(resetStatus))
+    return HttpResponse(status=200)
+
+# return true if the VM should reset counters
+def getReset(request):
+    return JsonResponse({'reset': ResetCounter})
+
 
 # Thymio calls this to get the next action on Manual mode
 def nextMove(request):
@@ -68,6 +81,7 @@ def backward(request):
     commands.append({'function' : "backward", 'speed' : -int(Speed)})
     return JsonResponse({'function' : "backward", 'speed' : -int(Speed)})
 
+
 # Allows the thimio to send sensor data to the server
 # method = POST + data in data:
 def sendStatus(request):
@@ -80,5 +94,6 @@ def sendStatus(request):
 
     return HttpResponse(status = 200)
 
+#returns the values the Thymio has sent
 def getStatus(request):
     return JsonResponse(values, safe=False)
