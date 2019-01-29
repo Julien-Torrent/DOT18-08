@@ -29,6 +29,9 @@ urlpatterns = [
     url(r'^api/setLeds/(?P<ledsStatus>\d)', app.api.setLeds, name='setLeds'),
     url(r'^api/getLeds', app.api.getLeds, name='getLeds'),
 
+    url(r'^api/setReset/(?P<resetStatus>\d)', app.api.setReset, name='setReset'),
+    url(r'^api/getReset', app.api.getReset, name='getReset'),
+
     url(r'^api/nextMove', app.api.nextMove, name='nextMove'),
     url(r'^api/turnLeft/(?P<angle>\d{0,3})', app.api.turnLeft, name='turnLeft'),
     url(r'^api/turnRight/(?P<angle>\d{0,3})', app.api.turnRight, name='turnRight'),
