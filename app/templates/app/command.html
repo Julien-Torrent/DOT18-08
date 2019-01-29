@@ -388,6 +388,16 @@ $("#printFunc").on("click",function(){
     console.log(command);
 });
 
+// Send order to reset counters on VM    
+$("#resetData").on("click", function () {
+     $.ajax({
+        type: "POST",
+        url: "api/setReset/1",
+        success: function(data){
+        }
+    });
+});
+
 //Execute commands to return to starting point
 $("#returnRobot").on("click",function(){
     //Retourner le robot
@@ -398,7 +408,6 @@ $("#returnRobot").on("click",function(){
             execCommand();
         }
     });
-    
 });
 
 //********************************************************//
