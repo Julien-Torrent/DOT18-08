@@ -8,7 +8,7 @@ Mode = 1            # Current Mode 0=Manual, 1=FullForward, 2=Automatic
 Speed = 0           # 0 to 1000 0=Stopped, 1000=Full Speed
 AllLedsOn = False   # False = éteint, True = allumé
 ResetCounter = False #False = no reset, True = Reset needed
-
+ReadLetter = False  # True = thymio must read letter
 
 commands = list()
 values = list()
@@ -54,6 +54,15 @@ def getReset(request):
     return JsonResponse({'reset': ResetCounter})
 
 
+def setReadLetter(request, readLetter):
+    global ReadLetter 
+    ReadLetter = bool(int(readLetter))
+    return HttpResponse(status=200)
+
+def getReadLetter(request):
+    return JsonResponse({'read': ReadLetter})
+
+
 # Thymio calls this to get the next action on Manual mode
 def nextMove(request):
     if(len(commands)):
@@ -97,3 +106,11 @@ def sendStatus(request):
 #returns the values the Thymio has sent
 def getStatus(request):
     return JsonResponse(values, safe=False)
+
+def sendLetter(request):
+    if request.method == 'POST':
+        letter = json.loads(request.body)
+        values = letter['values']
+        time = letter['time']
+    return HttpResponse(status = 200)
+         

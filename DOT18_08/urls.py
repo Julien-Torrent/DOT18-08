@@ -31,6 +31,9 @@ urlpatterns = [
 
     url(r'^api/setReset/(?P<resetStatus>\d)', app.api.setReset, name='setReset'),
     url(r'^api/getReset', app.api.getReset, name='getReset'),
+    
+    url(r'^api/setReadLetter/(?P<readLetter>\d)', app.api.setReadLetter, name='setReadLetter'),
+    url(r'^api/getReadLetter', app.api.getReadLetter, name='getReadLetter'),
 
     url(r'^api/nextMove', app.api.nextMove, name='nextMove'),
     url(r'^api/turnLeft/(?P<angle>\d{0,3})', app.api.turnLeft, name='turnLeft'),
