@@ -10,6 +10,9 @@ AllLedsOn = False   # False = éteint, True = allumé
 ResetCounter = False #False = no reset, True = Reset needed
 ReadLetter = False  # True = thymio must read letter
 
+Letter = ""         # Letter that has been found 
+LetterTime = 0      # Time the thymio has taken to read the letter
+
 commands = list()
 values = list()
 
@@ -42,6 +45,7 @@ def getSpeed(request):
     global Speed
     return JsonResponse({'speed': Speed})
 
+
 # Thymio set this to false when it has reseted counters
 # Webpage set this to true to indicate the VM should reset counters
 def setReset(request, resetStatus):
@@ -61,6 +65,16 @@ def setReadLetter(request, readLetter):
 
 def getReadLetter(request):
     return JsonResponse({'read': ReadLetter})
+
+def sendLetter(request):
+    if request.method == 'POST':
+        letter = json.loads(request.body)
+        values = letter['values']
+        time = letter['time']
+    return HttpResponse(status = 200)
+
+def getLastLetter(request):
+    return JsonResponse({'letter': Letter, 'time': LetterTime})
 
 
 # Thymio calls this to get the next action on Manual mode
@@ -106,11 +120,3 @@ def sendStatus(request):
 #returns the values the Thymio has sent
 def getStatus(request):
     return JsonResponse(values, safe=False)
-
-def sendLetter(request):
-    if request.method == 'POST':
-        letter = json.loads(request.body)
-        values = letter['values']
-        time = letter['time']
-    return HttpResponse(status = 200)
-         

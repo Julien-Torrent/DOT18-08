@@ -34,6 +34,8 @@ urlpatterns = [
     
     url(r'^api/setReadLetter/(?P<readLetter>\d)', app.api.setReadLetter, name='setReadLetter'),
     url(r'^api/getReadLetter', app.api.getReadLetter, name='getReadLetter'),
+    url(r'^api/sendLetter', app.api.sendLetter, name='sendLetter'),
+    url(r'^api/getLastLetter', app.api.getLastLetter, name="getLastLetter"),
 
     url(r'^api/nextMove', app.api.nextMove, name='nextMove'),
     url(r'^api/turnLeft/(?P<angle>\d{0,3})', app.api.turnLeft, name='turnLeft'),
