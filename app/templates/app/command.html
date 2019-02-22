@@ -52,7 +52,7 @@
         <h3>Control Panel</h3>
         <button type="button" id="setLED">Allumer les LEDs</button>
         <button type="button" id="resetData">Reset Thymio</button>
-
+        <button type="button" id="readLetter">Read Letter</button>
         <!--<hr>
 
         <h3>Debug</h3>
@@ -128,8 +128,26 @@ $(document).ready(function(){
 // ROBOT ACTIONS 
 //********************************************************//
 
-// Define speed 
+$("#readLetter").on("click", function(){
 
+    $.ajax({
+        type: "POST",
+        url: "api/setReadLetter/1",
+        success: function (data) {
+            setTimeout(function () {
+                $.ajax({
+                    type: "GET",
+                    url: "api/getLastLetter/",
+                    success: function (data) {
+                        alert("Letter found : " + data["letter"] + "    Time : " + data["time"]);
+                    }
+                });
+            }, 40000);
+        }
+    });
+});
+    
+// Define speed 
 $('#rangeSpeed').on("change mousemove", function() {
     $("#spNewSpeed").text("Speed : "+$('#rangeSpeed').val());
 });
