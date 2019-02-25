@@ -3,6 +3,7 @@ from django.template import RequestContext
 from django.http import HttpResponse
 from django.http import JsonResponse
 import json
+import random
 
 Mode = 1            # Current Mode 0=Manual, 1=FullForward, 2=Automatic
 Speed = 0           # 0 to 1000 0=Stopped, 1000=Full Speed
@@ -70,7 +71,10 @@ def sendLetter(request):
     if request.method == 'POST':
         letter = json.loads(request.body)
         values = letter['values']
-        time = letter['time']
+        LetterTime = letter['time']
+        
+        Letter = chr(random.randrange(65, 91, 1))
+
     return HttpResponse(status = 200)
 
 def getLastLetter(request):
